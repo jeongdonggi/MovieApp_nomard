@@ -26,16 +26,21 @@ const Detail = () => {
 
     return (
         <div className='App'>
-        {loading? <h1>Loading...</h1>: 
-            <div className="Movie">
-            <Movie
-                id={movie.id}
-                medium_cover_image={movie.medium_cover_image} 
-                title={movie.title}
-                summary={movie.description_intro}
-                genres={movie.genres}>
-            </Movie>
-            </div>  
+        {loading? (
+                    <div className="loader">
+                        <span className="loader_text">Loading...</span>
+                    </div>
+                    ) : ( 
+                            <div className="Movie">
+                            <Movie
+                                id={movie.id}
+                                medium_cover_image={movie.medium_cover_image} 
+                                title={movie.title}
+                                summary={movie.description_intro}
+                                genres={movie.genres}>
+                            </Movie>
+                            </div> 
+                    )
         }
         </div>
     );

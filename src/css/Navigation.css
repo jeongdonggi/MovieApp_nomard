@@ -1,0 +1,13 @@
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background-color: #333;
+}
+
+.nav__home {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
