@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Movie from "../components/Movie";
+import MovieDetail from "../components/MovieDetail";
+import axios from "axios";
 
 const Detail = () => {
 
@@ -10,38 +11,55 @@ const Detail = () => {
 
     const {id} = useParams(); // :id 처럼 되어있는 값을 받아온다.
     
+    const TMDB_API =  process.env.REACT_APP_TMDB_API_KEY;
+
     // useCallback: id가 변경될 때마다 함수 생성
     const getMovie = useCallback( async() => {
-        const json = await(
-            await fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
-        ).json();
+        console.log("id값: ", id);
+        const json = await (
+            await axios.get(`https://api.themoviedb.org/3/movie/${id}`,
+            {
+                params: {
+                    api_key: TMDB_API ,
+                    language : 'ko',
+                    page : 1,
+                    region : 'KR'
+                }
+            })
+        ).data;
         console.log(json);
-        setMovie(json.data.movie);
+        setMovie(json);
         setLoading(false);
-    },[id]);
+    },[id, TMDB_API]);
     
     useEffect(() => {
         getMovie();
     },[getMovie])
 
     return (
-        <div className='App'>
-        {loading? (
+        <div>
+            {loading? (
                     <div className="loader">
-                        <span className="loader_text">Loading...</span>
+                            <span className="loader_text">Loading...</span>
                     </div>
-                    ) : ( 
-                            <div className="Movie">
-                            <Movie
-                                id={movie.id}
-                                medium_cover_image={movie.medium_cover_image} 
-                                title={movie.title}
-                                summary={movie.description_intro}
-                                genres={movie.genres}>
-                            </Movie>
-                            </div> 
-                    )
-        }
+                ) : ( 
+                    <div className="movie__detail">
+                        <MovieDetail
+                            id={movie.id}
+                            title={movie.title}
+                            year={movie.release_date}
+                            showTm={movie.runtime}
+                            genres={movie.genres}
+                            background={movie.backdrop_path}
+                            poster={movie.poster_path}
+                            summary={movie.overview}
+                            tagline={movie.tagline}
+                            late={movie.vote_average}
+                        >
+                        </MovieDetail>
+                    </div> 
+                )
+            }
         </div>
     );
 }
